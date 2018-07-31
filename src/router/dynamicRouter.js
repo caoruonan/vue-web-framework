@@ -37,6 +37,12 @@ export const dynamicRouter = [
       name: 'demo1',
       title: '例1',
       component: resolve => { require(['@/views/example/demo1/list.vue'], resolve) }
+    },
+    {
+      path: 'testTable',
+      name: '表格示例',
+      title: '表格示例',
+      component: resolve => { require(['@/views/example/testTable/list.vue'], resolve) }
     }],
     actions: [{
       path: 'example/demo1/create',

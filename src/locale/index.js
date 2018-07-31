@@ -6,7 +6,9 @@ import en from 'iview/dist/locale/en-US'
 import zh from 'iview/dist/locale/zh-CN'
 
 Vue.use(VueI18n)
-Vue.use(iView)
+Vue.use(iView, {
+  i18n: (key, value) => i18n.t(key, value)
+})
 Vue.locale = () => {}
 
 // 自动设置语言

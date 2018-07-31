@@ -26,21 +26,21 @@
           <img src="./../../assets/img/avatar-bg.png" alt="User Image" class="bg-user">
         </div>
         <ul class="sidebar-menu" data-widget="tree">
-          <li v-for="(item,index) in menuList" :key="index" class="treeview">
-            <router-link v-if="!item.children.length" :to="item.path">
-              <i :class="[item.icon]"></i>
+          <li v-for="(item,index) in menuList" :key="index" :data-id="item.name" class="treeview">
+            <router-link v-if="item.children.length <= 1" :to="item.path + '/' + item.children[0].path">
+              <i :class="[item.children[0].icon || item.icon]"></i>
               <span>{{ item.name }}</span>
-              <span class="pull-right-container"></span>
+              <!--<span class="pull-right-container"></span>-->
             </router-link>
-            <a v-if="item.children.length" href="#">
+            <a v-if="item.children.length > 1" href="#">
               <i :class="[item.icon]"></i>
               <span>{{ item.name }}</span>
               <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
             </a>
-            <ul v-if="item.children.length" class="treeview-menu">
-              <li v-for="(subItem, subIndex) in item.children" :key="item.name + subIndex">
+            <ul v-if="item.children.length > 1" class="treeview-menu">
+              <li v-for="(subItem, subIndex) in item.children" :key="item.name + subIndex" :class="{active: subItem.name == currentName}">
                 <router-link :to="item.path + '/' + subItem.path">
                   <i :class="[subItem.icon]"></i>
                   <span>{{ subItem.name }}</span>
@@ -65,6 +65,13 @@ export default {
       required: true
     }
   },
+  data: function () {
+    return {
+      currentName: this.$route.name,
+      currentParentName: this.$route.matched[0].name,
+      currentParentClass: ''
+    }
+  },
   created: function () {
     $(document).ready(function ($) {
       $("[data-widget='tree']").each(function () {
@@ -72,7 +79,16 @@ export default {
       })
     })
   },
+  watch: {
+    '$route' () {
+      this.currentParentName = this.$route.matched[0].name
+      this.currentName = this.$route.name
+      $('.active').removeClass('active')
+      $('.treeview[data-id=' + this.currentParentName + ']').addClass('active')
+    }
+  },
   mounted: function () {
+    $('.treeview[data-id=' + this.currentParentName + ']').addClass('active')
     $(document).ready(function ($) {
       /* $('.main-sidebar > div').slimScroll({
         width: '230px',

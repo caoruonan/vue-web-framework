@@ -706,6 +706,7 @@ throw new Error('AdminLTE requires jQuery')
   };
 
   Tree.prototype.toggle = function (link, event) {
+
     var treeviewMenu = link.next(Selector.treeviewMenu);
     var parentLi     = link.parent();
     var isOpen       = parentLi.hasClass(ClassName.open);
@@ -756,8 +757,8 @@ throw new Error('AdminLTE requires jQuery')
   Tree.prototype._setUpListeners = function () {
     var that = this;
 
-    $(this.element).on('click', this.options.trigger, function (event) {
-      that.toggle($(this), event);
+    var flag = $(this.element).on('click', this.options.trigger, function (event) {
+      that.toggle($(this), event)
     });
   };
 
