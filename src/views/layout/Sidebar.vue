@@ -84,13 +84,13 @@ export default {
       this.currentParentName = this.$route.matched[0].name
       this.currentName = this.$route.matched[1].name
       $('.active').removeClass('active')
-      $('.treeview-menu li[data-id=' +  this.currentName + ']').addClass('active')
+      $('.treeview-menu li[data-id=' + this.currentName + ']').addClass('active')
       $('.treeview[data-id=' + this.currentParentName + ']').addClass('active')
     }
   },
   mounted: function () {
     $('.treeview[data-id=' + this.currentParentName + ']').addClass('active')
-    $('.treeview-menu li[data-id=' +  this.currentName + ']').addClass('active')
+    $('.treeview-menu li[data-id=' + this.currentName + ']').addClass('active')
     $(document).ready(function ($) {
       /* $('.main-sidebar > div').slimScroll({
         width: '230px',

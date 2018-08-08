@@ -96,16 +96,18 @@ export default {
       ]
     }
   },
-  computed: {
+  methods: {
     show (index) {
       this.$Modal.info({
         title: '用户信息',
-        content: '姓名：${this.rows[index].name}<br>年龄：${this.rows[index].age}<br>地址：${this.rows[index].address}'
+        content: '123'
       })
     },
     remove (index) {
       this.rows.splice(index, 1)
-    },
+    }
+  },
+  computed: {
     columns () {
       let columns = []
       if (this.showCheckbox) {

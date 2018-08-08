@@ -34,42 +34,18 @@ export const dynamicRouter = [
     ]
   },
   {
-    path: '/group',
-    name: 'group',
-    meta: {
-      icon: 'fas fa-table'
-    },
-    component: Content,
-    children: [
-      {
-        path: 'page1',
-        name: 'page1',
-        meta: {
-          icon: 'fas fa-table'
-        },
-        component: resolve => { require(['@/views/group/page1/page1.vue'], resolve) }
-      },
-      {
-        path: 'page2',
-        name: 'page2',
-        meta: {
-          icon: 'fas fa-table'
-        },
-        component: resolve => { require(['@/views/group/page2/page2.vue'], resolve) }
-      }
-    ]
-  },
-  {
     path: '/example',
     name: 'example',
     meta: {
-      icon: 'fas fa-table'
+      hide: true
     },
+    redirect: { name: 'demo1List' },
     component: Content,
     children: [{
       path: 'demo1',
       name: 'demo1',
       meta: {
+        icon: 'fas fa-table',
         title: 'demo1'
       },
       component: ParentView,
@@ -96,15 +72,25 @@ export const dynamicRouter = [
           component: resolve => { require(['@/views/example/demo1/create.vue'], resolve) }
         }
       ]
+    }
+    ]
+  },
+  {
+    path: '/table',
+    name: 'table',
+    meta: {
+      hide: true
     },
-    {
+    redirect: { name: 'testTable' },
+    component: Content,
+    children: [{
       path: 'testTable',
       name: 'testTable',
       meta: {
+        icon: 'fas fa-table',
         title: '表格示例'
       },
       component: resolve => { require(['@/views/example/testTable/list.vue'], resolve) }
-    }
-    ]
+    }]
   }
 ]
