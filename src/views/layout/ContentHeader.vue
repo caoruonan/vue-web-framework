@@ -1,202 +1,110 @@
 <template>
-  <section class="content-header">
-    <div ref="scrollCon" @DOMMouseScroll="handlescroll" @mousewheel="handlescroll" class="tags-outer-scroll-con">
-      <div class="close-all-tag-con">
-        <Dropdown transfer @on-click="handleTagsOption">
-          <Button size="small" type="primary">
-            标签选项
-            <Icon type="arrow-down-b"></Icon>
+  <div class="content-header">
+    <div class="tags-nav">
+      <div class="close-con">
+        <Dropdown transfer @on-click="handleTagsOption" placement="bottom-end" style="margin-top:7px;">
+          <Button size="small" type="text">
+            <Icon :size="18" type="ios-close-circle-outline" />
           </Button>
           <DropdownMenu slot="list">
-            <DropdownItem name="clearAll">关闭所有</DropdownItem>
-            <DropdownItem name="clearOthers">关闭其他</DropdownItem>
+            <DropdownItem name="close-all">关闭所有</DropdownItem>
+            <DropdownItem name="close-others">关闭其他</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>
-      <div class="tags-btn-box-left">
-        <i-button type="ghost" class="tabbar-btn-left" @click="handleclick('left')">
-          <Icon type="chevron-left"></Icon>
-        </i-button>
+      <div class="btn-con left-btn">
+        <Button type="text" @click="handleScroll(240)">
+          <Icon :size="18" type="ios-arrow-back" />
+        </Button>
       </div>
-      <div ref="scrollBody" class="tags-inner-scroll-body" :style="{left: tagBodyLeft + 'px'}">
-        <transition-group name="taglist-moving-animation">
-          <Tag
-            type="dot"
-            v-for="item in pageTagsList"
-            ref="tagsPageOpened"
-            :key="item.name"
-            :name="item.name"
-            @on-close="closePage"
-            @click.native="linkTo(item)"
-            :closable="item.name==='home_index'?false:true"
-            :color="item.children?(item.children[0].name===currentPageName?'blue':'default'):(item.name===currentPageName?'blue':'default')"
-          >{{ itemTitle(item) }}</Tag>
-        </transition-group>
+      <div class="btn-con right-btn">
+        <Button type="text" @click="handleScroll(-240)">
+          <Icon :size="18" type="ios-arrow-forward" />
+        </Button>
       </div>
-      <div class="tags-btn-box-right">
-        <i-button type="ghost" class="tabbar-btn-right" @click="handleclick('right')">
-          <Icon type="chevron-right"></Icon>
-        </i-button>
+      <div class="scroll-outer" ref="scrollOuter" @DOMMouseScroll="handlescroll" @mousewheel="handlescroll">
+        <div ref="scrollBody" class="scroll-body" :style="{left: tagBodyLeft + 'px'}">
+          <transition-group name="taglist-moving-animation">
+            <Tag
+              type="dot"
+              v-for="item in list"
+              ref="tagsPageOpened"
+              :key="`tag-nav-${item.name}`"
+              :name="item.name"
+              @on-close="handleClose"
+              @click.native="handleClick(item)"
+              :closable="item.name==='home'?false:true"
+              :color="item.name === value.name ? 'primary' : 'default'"
+            >{{ showTitleInside(item) }}</Tag>
+          </transition-group>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>
+import { showTitle } from '@/libs/util'
 export default {
   name: 'ContentHeader',
-  data () {
-    return {
-      currentPageName: this.$route.name,
-      tagBodyLeft: 26,
-      refsTag: [],
-      tagsCount: 1
-    }
-  },
   props: {
-    pageTagsList: Array,
-    beforePush: {
-      type: Function,
-      default: (item) => {
-        return true
+    value: Object,
+    list: {
+      type: Array,
+      default () {
+        return []
       }
     }
   },
-  computed: {
-    title () {
-      return this.$store.state.app.currentTitle
-    },
-    tagsList () {
-      return this.$store.state.app.pageOpenedList
+  data () {
+    return {
+      tagBodyLeft: 0
     }
   },
   methods: {
-    itemTitle (item) {
-      if (typeof item.title === 'object') {
-        return this.$t(item.title.i18n)
-      } else {
-        return item.title
-      }
-    },
-    closePage (event, name) {
-      let pageOpenedList = this.$store.state.app.pageOpenedList
-      let lastPageObj = pageOpenedList[0]
-      if (this.currentPageName === name) {
-        let len = pageOpenedList.length
-        for (let i = 1; i < len; i++) {
-          if (pageOpenedList[i].name === name) {
-            if (i < (len - 1)) {
-              lastPageObj = pageOpenedList[i + 1]
-            } else {
-              lastPageObj = pageOpenedList[i - 1]
-            }
-            break
-          }
-        }
-      } else {
-        let tagWidth = event.target.parentNode.offsetWidth
-        this.tagBodyLeft = Math.min(this.tagBodyLeft + tagWidth, 26)
-      }
-      this.$store.commit('removeTag', name)
-      this.$store.commit('closePage', name)
-      pageOpenedList = this.$store.state.app.pageOpenedList
-      localStorage.pageOpenedList = JSON.stringify(pageOpenedList)
-      if (this.currentPageName === name) {
-        this.linkTo(lastPageObj)
-      }
-    },
-    linkTo (item) {
-      let routerObj = {}
-      routerObj.name = item.name
-      if (item.argu) {
-        routerObj.params = item.argu
-      }
-      if (item.query) {
-        routerObj.query = item.query
-      }
-      if (this.beforePush(item)) {
-        this.$router.push(routerObj)
-      }
-    },
-    handleclick (type) {
-      if (type === 'left') {
-        if (this.$refs.scrollCon.offsetWidth - 182 < this.$refs.scrollBody.offsetWidth) {
-          this.tagBodyLeft = Math.max(this.tagBodyLeft - 120, this.$refs.scrollCon.offsetWidth - this.$refs.scrollBody.offsetWidth - 135)
-        }
-      } else {
-        this.tagBodyLeft = Math.min(26, this.tagBodyLeft + 120)
-      }
-    },
     handlescroll (e) {
       var type = e.type
       let delta = 0
       if (type === 'DOMMouseScroll' || type === 'mousewheel') {
         delta = (e.wheelDelta) ? e.wheelDelta : -(e.detail || 0) * 40
       }
-      let left = 26
-      if (delta > 0) {
-        left = Math.min(26, this.tagBodyLeft + delta)
+      this.handleScroll(delta)
+    },
+    handleScroll (offset) {
+      if (offset > 0) {
+        this.tagBodyLeft = Math.min(0, this.tagBodyLeft + offset)
       } else {
-        if (this.$refs.scrollCon.offsetWidth - 135 < this.$refs.scrollBody.offsetWidth) {
-          if (this.tagBodyLeft < -(this.$refs.scrollBody.offsetWidth - this.$refs.scrollCon.offsetWidth + 135)) {
-            left = this.tagBodyLeft
+        if (this.$refs.scrollOuter.offsetWidth < this.$refs.scrollBody.offsetWidth) {
+          if (this.tagBodyLeft < -(this.$refs.scrollBody.offsetWidth - this.$refs.scrollOuter.offsetWidth)) {
+            this.tagBodyLeft = this.tagBodyLeft
           } else {
-            left = Math.max(this.tagBodyLeft + delta, this.$refs.scrollCon.offsetWidth - this.$refs.scrollBody.offsetWidth - 135)
+            this.tagBodyLeft = Math.max(this.tagBodyLeft + offset, this.$refs.scrollOuter.offsetWidth - this.$refs.scrollBody.offsetWidth)
           }
         } else {
-          this.tagBodyLeft = 26
+          this.tagBodyLeft = 0
         }
       }
-      this.tagBodyLeft = left
     },
     handleTagsOption (type) {
-      if (type === 'clearAll') {
-        this.$store.commit('clearAllTags')
-        this.$router.push({
-          name: 'home_index'
-        })
+      if (type === 'close-all') {
+        // 关闭所有，除了home
+        let res = this.list.filter(item => item.name === 'home')
+        this.$emit('on-close', res, 'all')
       } else {
-        this.$store.commit('clearOtherTags', this)
+        // 关闭除当前页和home页的其他页
+        let res = this.list.filter(item => item.name === this.value.name || item.name === 'home')
+        this.$emit('on-close', res, 'others')
       }
-      this.tagBodyLeft = 26
     },
-    moveToView (tag) {
-      if (tag.offsetLeft < -this.tagBodyLeft) {
-        // 标签在可视区域左侧
-        this.tagBodyLeft = -tag.offsetLeft + 10
-      } else if (tag.offsetLeft + 10 > -this.tagBodyLeft && tag.offsetLeft + tag.offsetWidth < -this.tagBodyLeft + this.$refs.scrollCon.offsetWidth - 135) {
-        // 标签在可视区域
-        this.tagBodyLeft = Math.min(26, this.$refs.scrollCon.offsetWidth - 135 - tag.offsetWidth - tag.offsetLeft - 14)
-      } else {
-        // 标签在可视区域右侧
-        this.tagBodyLeft = -(tag.offsetLeft - (this.$refs.scrollCon.offsetWidth - 135 - tag.offsetWidth) + 14)
-      }
-    }
-  },
-  mounted () {
-    this.refsTag = this.$refs.tagsPageOpened
-    setTimeout(() => {
-      this.refsTag.forEach((item, index) => {
-        if (this.$route.name === item.name) {
-          let tag = this.refsTag[index].$el
-          this.moveToView(tag)
-        }
-      })
-    }, 1) // 这里不设定时器就会有偏移bug
-    this.tagsCount = this.tagsList.length
-  },
-  watch: {
-    '$route' (to) {
-      this.currentPageName = to.name
-      this.$nextTick(() => {
-        this.refsTag.forEach((item, index) => {
-          if (to.name === item.name) {
-            let tag = this.refsTag[index].$el
-            this.moveToView(tag)
-          }
-        })
-      })
-      this.tagsCount = this.tagsList.length
+    handleClose (e, name) {
+      let res = this.list.filter(item => item.name !== name)
+      this.$emit('on-close', res, undefined, name)
+    },
+    handleClick (item) {
+      this.$emit('input', item)
+    },
+    showTitleInside (item) {
+      return showTitle(item, this)
     }
   }
 }

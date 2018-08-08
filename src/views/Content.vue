@@ -5,7 +5,7 @@
     <app-sidebar :menu-list="menuList"></app-sidebar>
 
     <div class="content-wrapper">
-      <app-content-header :pageTagsList="pageTagsList"></app-content-header>
+      <app-content-header :value="$route" @input="handleClick" :list="tagNavList" @on-close="handleCloseTag"></app-content-header>
       <section class="content">
         <router-view></router-view>
       </section>
@@ -19,7 +19,8 @@ import Sidebar from './layout/Sidebar.vue'
 import Header from './layout/Header.vue'
 import Footer from './layout/Footer.vue'
 import ContentHeader from './layout/ContentHeader.vue'
-import util from '../libs/util'
+import { getNewTagList, getNextName } from '../libs/util'
+import { mapMutations } from 'vuex'
 
 export default {
   name: 'Content',
@@ -31,28 +32,52 @@ export default {
   },
   computed: {
     menuList () {
-      return this.$store.state.app.menuList
-    },
-    currentPath () {
-      return this.$store.state.app.currentPath
+      return this.$store.getters.menuList
     },
     cachePage () {
       return this.$store.state.app.cachePage
     },
-    pageTagsList () {
-      return this.$store.state.app.pageOpenedList // 打开的页面的页面对象
+    tagNavList () {
+      return this.$store.state.app.tagNavList
+    },
+    cacheList () {
+      return this.tagNavList.length ? this.tagNavList.filter(item => !(item.meta && item.meta.notCache)).map(item => item.name) : []
     }
   },
+  mounted () {
+    this.setTagNavList()
+    this.addTag(this.$store.state.app.homeRoute)
+    this.setBreadCrumb(this.$route.matched)
+  },
   methods: {
-    checkTag (name) {
-      let openpageHasTag = this.pageTagsList.some(item => {
-        if (item.name === name) {
-          return true
-        }
-      })
-      if (!openpageHasTag) { //  解决关闭当前标签后再点击回退按钮会退到当前页时没有标签的问题
-        util.openNewPage(this, name, this.$route.params || {}, this.$route.query || {})
+    ...mapMutations([
+      'setBreadCrumb',
+      'addTag',
+      'setTagNavList'
+    ]),
+    turnToPage (name) {
+      if (name.indexOf('isTurnByHref_') > -1) {
+        window.open(name.split('_')[1])
+        return
       }
+      this.$router.push({
+        name: name
+      })
+    },
+    handleCloseTag (res, type, name) {
+      const nextName = getNextName(this.tagNavList, name)
+      this.setTagNavList(res)
+      if (type === 'all') this.turnToPage('home')
+      else if (this.$route.name === name) this.$router.push({ name: nextName })
+    },
+    handleClick (item) {
+      this.turnToPage(item.name)
+    }
+  },
+  watch: {
+    '$route' (newRoute) {
+      this.setTagNavList(getNewTagList(this.tagNavList, newRoute))
+      this.setBreadCrumb(newRoute.matched)
     }
   }
 }

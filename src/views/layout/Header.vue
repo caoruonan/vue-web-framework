@@ -1,4 +1,4 @@
-<style scoped>
+<style>
   .main-header .header-middle-con {
     position: absolute;
     left: 60px;
@@ -7,18 +7,16 @@
     bottom: 0;
     padding: 10px;
     overflow: hidden;
+    color: white;
   }
-
-  .main-breadcrumb {
+  .main-header .header-middle-con .main-breadcrumb {
     padding: 12px 15px;
   }
-
-  .ivu-breadcrumb {
+  .main-header .header-middle-con .ivu-breadcrumb,.main-header .header-middle-con .ivu-breadcrumb-item-link {
     color: #fff;
     font-size: 14px;
   }
-
-  .ivu-breadcrumb a {
+  .main-header .header-middle-con .ivu-breadcrumb a {
     color: #fff;
     transition: color .2s ease-in-out;
   }
@@ -31,7 +29,7 @@
     </router-link>
     <nav class="navbar navbar-static-top">
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button" @click="recordSidebarStatus">
-        <Icon type="navicon-round"></Icon>
+        <Icon type="md-menu"></Icon>
         <span class="sr-only">{{ $t('ToggleNavigation') }}</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -40,12 +38,11 @@
       <div class="breadcrumb-area">
         <div class="header-middle-con">
           <div class="main-breadcrumb">
-            <div class="ivu-breadcrumb">
-              <span v-for="(breadcrumb, index) in breadcrumbList" :key="index">
-                <a @click="jumpPage(breadcrumb.name)" class="ivu-breadcrumb-item-link">{{ breadcrumb.title }}</a>
-                <span class="ivu-breadcrumb-item-separator">/</span>
-              </span>
-            </div>
+            <Breadcrumb>
+              <BreadcrumbItem v-for="item in breadCrumbList" :to="item.to" :key="`bread-crumb-${item.name}`">
+                {{ showTitle(item) }}
+              </BreadcrumbItem>
+            </Breadcrumb>
           </div>
         </div>
       </div>
@@ -89,29 +86,30 @@
 import lockScreen from './functions/lockscreen/lockscreen.vue'
 import themeSwitch from './functions/theme-switch/theme-switch.vue'
 import languageSwitch from './functions/language-switch/language-switch.vue'
+import { showTitle } from '@/libs/util'
 
 export default {
-  name: 'ContentHeader',
+  name: 'Header',
   components: {
     lockScreen,
     themeSwitch,
     languageSwitch
   },
   computed: {
-    breadcrumbList: function () {
-      return this.$store.state.app.currentPath
+    breadCrumbList () {
+      return this.$store.state.app.breadCrumbList
     }
   },
   methods: {
+    showTitle (item) {
+      return showTitle(item, this)
+    },
     recordSidebarStatus: function () {
       if (this.$store.state.app.sidebarStatus === 'expand') {
         this.$store.commit('recordSidebarStatus', 'collapse')
       } else {
         this.$store.commit('recordSidebarStatus', 'expand')
       }
-    },
-    jumpPage: function (routerName) {
-      this.$router.push({name: routerName})
     }
   }
 }

@@ -1,6 +1,6 @@
 .content-wrapper{
   position: relative;
-  margin-top: $header-height + 50px;
+  margin-top: $header-height + 40px;
   background-color: #f0f0f0;
   .content-header {
     position: fixed;
@@ -15,53 +15,62 @@
     transition: left .3s ease-in-out,-webkit-transform .3s ease-in-out;
     transition: transform .3s ease-in-out,left .3s ease-in-out;
     transition: transform .3s ease-in-out,left .3s ease-in-out,-webkit-transform .3s ease-in-out;
-    .tags-outer-scroll-con{
+    .tags-nav{
       background-color: #f0f0f0;
       position: relative;
       box-sizing: border-box;
       padding-right: 120px;
       width: 100%;
-      height: 50px;
-      .tags-inner-scroll-body{
-        position: absolute;
-        padding: 5px 10px;
-        overflow: visible;
-        white-space: nowrap;
-        transition: left .3s ease;
+      height: 40px;
+      .ivu-btn, .ivu-btn:focus {
+        box-shadow: none;
       }
-      .close-all-tag-con{
+      .scroll-outer{
+        position: absolute;
+        left: 28px;
+        right: 61px;
+        top: 0;
+        bottom: 0;
+        .scroll-body {
+          height: calc(100% - 1px);
+          display: inline-block;
+          padding: 1px 4px 0;
+          position: absolute;
+          overflow: visible;
+          white-space: nowrap;
+          -webkit-transition: left .3s ease;
+          transition: left .3s ease;
+        }
+      }
+      .close-con{
         position: absolute;
         right: 0;
         top: 0;
-        box-sizing: border-box;
-        padding-top: 13px;
-        text-align: center;
-        width: 110px;
         height: 100%;
-        background: white;
-        box-shadow: -3px 0 15px 3px rgba(0, 0, 0, .1);
+        width: 32px;
+        background: #fff;
+        text-align: center;
         z-index: 10;
       }
-      .tags-btn-box-left,.tags-btn-box-right {
-        background: #f6f6f6;
+      .btn-con {
         position: absolute;
         top: 0;
-        bottom: 0;
-        text-align: center;
-        padding: 8px 10px;
-        z-index: 1;
-        .ivu-btn {
-          background: white;
-          padding: 5px 4px;
+        height: 100%;
+        background: #fff;
+        padding-top: 3px;
+        z-index: 10;
+        button {
+          padding: 6px 4px;
+          line-height: 14px;
+          text-align: center;
         }
       }
-      .tags-btn-box-left {
+      .btn-con.left-btn {
         left: 0;
-        background-color: transparent;
       }
-      .tags-btn-box-right {
-        right: 110px;
-        background-color: transparent;
+      .btn-con.right-btn {
+        right: 32px;
+        border-right: 1px solid #F0F0F0;
       }
     }
   }
@@ -69,7 +78,7 @@
     position: fixed;
     left: $sidebar-width;
     right: 0;
-    top: $header-height + 50px;
+    top: $header-height + 40px;
     bottom: 50px;
     overflow-y: auto;
     -webkit-transition: -webkit-transform .3s ease-in-out,left .3s ease-in-out;
@@ -97,76 +106,44 @@
     }
   }
 }
-.skin-purple .content-wrapper .content-header .tags-outer-scroll-con {
-  .ivu-tag-blue.ivu-tag-dot .ivu-tag-dot-inner {
+.skin-purple .content-wrapper .content-header .scroll-body {
+  .ivu-tag.ivu-tag-primary .ivu-tag-dot-inner {
     background: #6763b5;
   }
-  .close-all-tag-con .ivu-btn-primary {
-    background-color: #6763b5;
-    border-color: #6763b5;
-  }
 }
-.skin-green .content-wrapper .content-header .tags-outer-scroll-con {
-  .ivu-tag-blue.ivu-tag-dot .ivu-tag-dot-inner {
+.skin-green .content-wrapper .content-header .scroll-body {
+  .ivu-tag.ivu-tag-primary .ivu-tag-dot-inner {
     background: #00a854;
   }
-  .close-all-tag-con .ivu-btn-primary {
-    background-color: #00a854;
-    border-color: #00a854;
-  }
 }
-.skin-red .content-wrapper .content-header .tags-outer-scroll-con {
-  .ivu-tag-blue.ivu-tag-dot .ivu-tag-dot-inner {
+.skin-red .content-wrapper .content-header .scroll-body {
+  .ivu-tag.ivu-tag-primary .ivu-tag-dot-inner {
     background: #f04134;
   }
-  .close-all-tag-con .ivu-btn-primary {
-    background-color: #f04134;
-    border-color: #f04134;
-  }
 }
-.skin-yellow .content-wrapper .content-header .tags-outer-scroll-con {
-  .ivu-tag-blue.ivu-tag-dot .ivu-tag-dot-inner {
+.skin-yellow .content-wrapper .content-header .scroll-body {
+  .ivu-tag.ivu-tag-primary .ivu-tag-dot-inner {
     background: #f56a00;
   }
-  .close-all-tag-con .ivu-btn-primary {
-    background-color: #f56a00;
-    border-color: #f56a00;
-  }
 }
-.skin-purple-light .content-wrapper .content-header .tags-outer-scroll-con {
-  .ivu-tag-blue.ivu-tag-dot .ivu-tag-dot-inner {
+.skin-purple-light .content-wrapper .content-header .scroll-body {
+  .ivu-tag.ivu-tag-primary .ivu-tag-dot-inner {
     background: #6763b5;
   }
-  .close-all-tag-con .ivu-btn-primary {
-    background-color: #6763b5;
-    border-color: #6763b5;
-  }
 }
-.skin-green-light .content-wrapper .content-header .tags-outer-scroll-con {
-  .ivu-tag-blue.ivu-tag-dot .ivu-tag-dot-inner {
+.skin-green-light .content-wrapper .content-header .scroll-body {
+  .ivu-tag.ivu-tag-primary .ivu-tag-dot-inner {
     background: #00a854;
   }
-  .close-all-tag-con .ivu-btn-primary {
-    background-color: #00a854;
-    border-color: #00a854;
-  }
 }
-.skin-red-light .content-wrapper .content-header .tags-outer-scroll-con {
-  .ivu-tag-blue.ivu-tag-dot .ivu-tag-dot-inner {
+.skin-red-light .content-wrapper .content-header .scroll-body {
+  .ivu-tag.ivu-tag-primary .ivu-tag-dot-inner {
     background: #f04134;
   }
-  .close-all-tag-con .ivu-btn-primary {
-    background-color: #f04134;
-    border-color: #f04134;
-  }
 }
-.skin-yellow-light .content-wrapper .content-header .tags-outer-scroll-con {
-  .ivu-tag-blue.ivu-tag-dot .ivu-tag-dot-inner {
+.skin-yellow-light .content-wrapper .content-header .scroll-body {
+  .ivu-tag.ivu-tag-primary .ivu-tag-dot-inner {
     background: #f56a00;
-  }
-  .close-all-tag-con .ivu-btn-primary {
-    background-color: #f56a00;
-    border-color: #f56a00;
   }
 }
 

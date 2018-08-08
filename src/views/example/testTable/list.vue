@@ -97,6 +97,15 @@ export default {
     }
   },
   computed: {
+    show (index) {
+      this.$Modal.info({
+        title: '用户信息',
+        content: '姓名：${this.rows[index].name}<br>年龄：${this.rows[index].age}<br>地址：${this.rows[index].address}'
+      })
+    },
+    remove (index) {
+      this.rows.splice(index, 1)
+    },
     columns () {
       let columns = []
       if (this.showCheckbox) {
@@ -165,6 +174,38 @@ export default {
         ],
         filterMethod (value, row) {
           return row.address.indexOf(value) > -1
+        }
+      })
+      columns.push({
+        title: '操作',
+        key: 'action',
+        width: 150,
+        align: 'center',
+        render: (h, params) => {
+          return h('div', [
+            h('Button', {
+              props: {
+                type: 'primary',
+                size: 'small'
+              },
+              on: {
+                click: () => {
+                  this.show(params.index)
+                }
+              }
+            }, 'View'),
+            h('Button', {
+              props: {
+                type: 'error',
+                size: 'small'
+              },
+              on: {
+                click: () => {
+                  this.remove(params.index)
+                }
+              }
+            }, 'Delete')
+          ])
         }
       })
       return columns

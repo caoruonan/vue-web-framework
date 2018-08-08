@@ -19,7 +19,8 @@
             <input ref="inputEle" v-model="password" class="unlock-input" type="password" placeholder="密码同登录密码"/>
             <button ref="unlockBtn" @mousedown="unlockMousedown" @mouseup="unlockMouseup" @click="handleUnlock"
                     class="unlock-btn">
-              <Icon color="white" type="key"></Icon>
+              <!--<Icon color="white" type="md-key"></Icon>-->
+              <Icon color="white" type="md-key" />
             </button>
           </div>
         </div>

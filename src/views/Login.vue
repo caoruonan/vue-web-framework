@@ -15,15 +15,15 @@
             <FormItem prop="userName">
               <Input v-model="form.userName" placeholder="请输入用户名">
               <span slot="prepend">
-                                    <Icon :size="16" type="person"></Icon>
-                                </span>
+                <Icon :size="16" type="ios-person"/>
+              </span>
               </Input>
             </FormItem>
             <FormItem prop="password">
               <Input type="password" v-model="form.password" placeholder="请输入密码">
               <span slot="prepend">
-                                    <Icon :size="14" type="locked"></Icon>
-                                </span>
+                <Icon :size="14" type="md-lock"/>
+              </span>
               </Input>
             </FormItem>
             <FormItem>
@@ -69,7 +69,7 @@ export default {
             Cookies.set('access', 1)
           }
           this.$router.push({
-            name: 'home_index'
+            name: 'home'
           })
         }
       })

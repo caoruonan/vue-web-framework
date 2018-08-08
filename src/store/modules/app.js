@@ -1,36 +1,90 @@
-import { otherRouter, appRouter } from '@/router/router'
-import Util from '@/libs/util'
+import { appRouter } from '@/router/router'
+import { setTagNavListInLocalstorage, getTagNavListFromLocalstorage, getHomeRoute, getMenuByRouter, getBreadCrumbList, showThisRoute } from '@/libs/util'
 import Vue from 'vue'
+import Cookies from 'js-cookie'
 
 const app = {
   state: {
-    cachePage: [],
-    lang: localStorage.getItem('lang'),
-    openedSubmenuArr: [], // 要展开的菜单数组
     themeName: 'skin-custom', // 主题
+    lang: localStorage.getItem('lang'),
     sidebarStatus: !localStorage.getItem('sidebar-status') ? 'expand' : localStorage.getItem('sidebar-status'),
-    pageOpenedList: [{
-      title: '首页',
-      path: '',
-      name: 'home_index'
-    }],
-    currentPageName: '',
-    currentPath: [
-      {
-        title: '首页',
-        path: '',
-        name: 'home_index'
-      }
-    ], // 面包屑数组
-    menuList: [],
-    routers: [
-      otherRouter,
-      ...appRouter
-    ],
-    tagsList: [...otherRouter.children],
+    tagNavList: [], // contentHeader
+    breadCrumbList: [],
+    homeRoute: getHomeRoute(appRouter),
+    cachePage: [],
     dontCache: ['text-editor', 'artical-publish'] // 在这里定义你不想要缓存的页面的name属性值(参见路由配置router.js)
   },
+  getters: {
+    menuList: (state, getters, rootState) => getMenuByRouter(appRouter, Cookies.get('access'))
+  },
   mutations: {
+    setBreadCrumb (state, routeMetched) {
+      state.breadCrumbList = getBreadCrumbList(routeMetched)
+    },
+    updateMenulist (state) {
+      let accessCode = parseInt(Cookies.get('access'))
+      let menuList = []
+      appRouter.forEach((item, index) => {
+        if (item.access !== undefined) {
+          if (showThisRoute(item.access, accessCode)) {
+            if (item.children.length === 1) {
+              menuList.push(item)
+            } else {
+              let len = menuList.push(item)
+              let childrenArr = []
+              childrenArr = item.children.filter(child => {
+                if (child.access !== undefined) {
+                  if (child.access === accessCode) {
+                    return child
+                  }
+                } else {
+                  return child
+                }
+              })
+              menuList[len - 1].children = childrenArr
+            }
+          }
+        } else {
+          if (item.children.length === 1) {
+            menuList.push(item)
+          } else {
+            let len = menuList.push(item)
+            let childrenArr = []
+            childrenArr = item.children.filter(child => {
+              if (child.access !== undefined) {
+                if (showThisRoute(child.access, accessCode)) {
+                  return child
+                }
+              } else {
+                return child
+              }
+            })
+            if (childrenArr === undefined || childrenArr.length === 0) {
+              menuList.splice(len - 1, 1)
+            } else {
+              let handledItem = JSON.parse(JSON.stringify(menuList[len - 1]))
+              handledItem.children = childrenArr
+              menuList.splice(len - 1, 1, handledItem)
+            }
+          }
+        }
+      })
+      state.menuList = menuList
+    },
+
+    setTagNavList (state, list) {
+      if (list) {
+        state.tagNavList = [...list]
+        setTagNavListInLocalstorage([...list])
+      } else state.tagNavList = getTagNavListFromLocalstorage()
+    },
+    addTag (state, item, type = 'unshift') {
+      if (state.tagNavList.findIndex(tag => tag.name === item.name) < 0) {
+        if (type === 'push') state.tagNavList.push(item)
+        else state.tagNavList.unshift(item)
+        setTagNavListInLocalstorage([...state.tagNavList])
+      }
+    },
     changeTheme (state, theme) {
       state.themeName = theme
     },
@@ -41,12 +95,6 @@ const app = {
     switchLang (state, lang) {
       state.lang = lang
       Vue.config.lang = lang
-    },
-    setTagsList (state, list) {
-      state.tagsList.push(...list)
-    },
-    updateMenulist (state) {
-      state.menuList = appRouter
     },
     closePage (state, name) {
       state.cachePage.forEach((item, index) => {
@@ -59,66 +107,6 @@ const app = {
       if (localStorage.cachePage) {
         state.cachePage = JSON.parse(localStorage.cachePage)
       }
-    },
-    removeTag (state, name) {
-      state.pageOpenedList.map((item, index) => {
-        if (item.name === name) {
-          state.pageOpenedList.splice(index, 1)
-        }
-      })
-    },
-    pageOpenedList (state, get) {
-      let openedPage = state.pageOpenedList[get.index]
-      if (get.argu) {
-        openedPage.argu = get.argu
-      }
-      if (get.query) {
-        openedPage.query = get.query
-      }
-      state.pageOpenedList.splice(get.index, 1, openedPage)
-      localStorage.pageOpenedList = JSON.stringify(state.pageOpenedList)
-    },
-    clearAllTags (state) {
-      state.pageOpenedList.splice(1)
-      state.cachePage.length = 0
-      localStorage.pageOpenedList = JSON.stringify(state.pageOpenedList)
-    },
-    clearOtherTags (state, vm) {
-      let currentName = vm.$route.name
-      let currentIndex = 0
-      state.pageOpenedList.forEach((item, index) => {
-        if (item.name === currentName) {
-          currentIndex = index
-        }
-      })
-      if (currentIndex === 0) {
-        state.pageOpenedList.splice(1)
-      } else {
-        state.pageOpenedList.splice(currentIndex + 1)
-        state.pageOpenedList.splice(1, currentIndex - 1)
-      }
-      let newCachepage = state.cachePage.filter(item => {
-        return item === currentName
-      })
-      state.cachePage = newCachepage
-      localStorage.pageOpenedList = JSON.stringify(state.pageOpenedList)
-    },
-    setOpenedList (state) {
-      state.pageOpenedList = localStorage.pageOpenedList ? JSON.parse(localStorage.pageOpenedList) : [otherRouter.children[0]]
-    },
-    setCurrentPath (state, pathArr) {
-      state.currentPath = pathArr
-    },
-    setCurrentPageName (state, name) {
-      state.currentPageName = name
-    },
-    increateTag (state, tagObj) {
-      if (!Util.oneOf(tagObj.name, state.dontCache)) {
-        state.cachePage.push(tagObj.name)
-        localStorage.cachePage = JSON.stringify(state.cachePage)
-      }
-      state.pageOpenedList.push(tagObj)
-      localStorage.pageOpenedList = JSON.stringify(state.pageOpenedList)
     }
   }
 }

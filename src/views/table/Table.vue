@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="v-table-content">
     <Table :border="showBorder" :stripe="showStripe" :show-header="showHeader" :height="fixedHeader ? 250 : ''" :size="tableSize" :data="rows" :columns="columns"></Table>
     <div style="margin: 10px;overflow: hidden">
       <div style="float: right;">
@@ -50,3 +50,9 @@ export default {
   computed: {}
 }
 </script>
+
+<style>
+  .v-table-content td .ivu-table-cell button.ivu-btn{
+    margin-right: 5px;
+  }
+</style>

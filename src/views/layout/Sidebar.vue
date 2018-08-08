@@ -10,15 +10,15 @@
             <p>上午好, 王伟健</p>
             <div>
               <a href="#">
-                <Icon type="ios-settings-strong"></Icon>
+                <Icon type="md-options" />
                 <small>设置</small>
               </a>
               <a href="#">
-                <Icon type="person"></Icon>
+                <Icon type="md-person" />
                 <small>配置文件</small>
               </a>
               <a href="#">
-                <Icon type="power"></Icon>
+                <Icon type="ios-power" />
                 <small>注销</small>
               </a>
             </div>
@@ -27,23 +27,22 @@
         </div>
         <ul class="sidebar-menu" data-widget="tree">
           <li v-for="(item,index) in menuList" :key="index" :data-id="item.name" class="treeview">
-            <router-link v-if="item.children.length <= 1" :to="item.path + '/' + item.children[0].path">
+            <router-link v-if="item.children.length <= 1" :to="{name: item.name}">
               <i :class="[item.children[0].icon || item.icon]"></i>
-              <span>{{ item.name }}</span>
-              <!--<span class="pull-right-container"></span>-->
+              <span>{{ showTitle(item) }}</span>
             </router-link>
             <a v-if="item.children.length > 1" href="#">
               <i :class="[item.icon]"></i>
-              <span>{{ item.name }}</span>
+              <span>{{ showTitle(item) }}</span>
               <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
             </a>
             <ul v-if="item.children.length > 1" class="treeview-menu">
-              <li v-for="(subItem, subIndex) in item.children" :key="item.name + subIndex" :class="{active: subItem.name == currentName}">
-                <router-link :to="item.path + '/' + subItem.path">
+              <li v-for="(subItem, subIndex) in item.children" :key="item.name + subIndex" :data-id="subItem.name">
+                <router-link :to="{name: subItem.name}">
                   <i :class="[subItem.icon]"></i>
-                  <span>{{ subItem.name }}</span>
+                  <span>{{ showTitle(subItem) }}</span>
                 </router-link>
               </li>
             </ul>
@@ -56,6 +55,7 @@
 
 <script>
 import $ from 'jquery'
+import { showTitle } from '@/libs/util'
 
 export default {
   name: 'ContentSidebar',
@@ -67,7 +67,7 @@ export default {
   },
   data: function () {
     return {
-      currentName: this.$route.name,
+      currentName: this.$route.matched[1].name,
       currentParentName: this.$route.matched[0].name,
       currentParentClass: ''
     }
@@ -82,13 +82,15 @@ export default {
   watch: {
     '$route' () {
       this.currentParentName = this.$route.matched[0].name
-      this.currentName = this.$route.name
+      this.currentName = this.$route.matched[1].name
       $('.active').removeClass('active')
+      $('.treeview-menu li[data-id=' +  this.currentName + ']').addClass('active')
       $('.treeview[data-id=' + this.currentParentName + ']').addClass('active')
     }
   },
   mounted: function () {
     $('.treeview[data-id=' + this.currentParentName + ']').addClass('active')
+    $('.treeview-menu li[data-id=' +  this.currentName + ']').addClass('active')
     $(document).ready(function ($) {
       /* $('.main-sidebar > div').slimScroll({
         width: '230px',
@@ -97,6 +99,11 @@ export default {
         height: '95vh'
       }) */
     })
+  },
+  methods: {
+    showTitle (item) {
+      return showTitle(item, this)
+    }
   }
 }
 </script>
