@@ -46,6 +46,7 @@ export default {
   },
   mounted () {
     this.setTagNavList()
+    this.setTagNavList(getNewTagList(this.tagNavList, this.$route))
     this.addTag(this.$store.state.app.homeRoute)
     this.setBreadCrumb(this.$route.matched)
   },
