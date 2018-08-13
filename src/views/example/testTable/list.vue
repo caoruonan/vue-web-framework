@@ -9,6 +9,8 @@
         显示多选框 <i-switch v-model="showCheckbox" style="margin-right: 5px"></i-switch>
         显示表头 <i-switch v-model="showHeader" style="margin-right: 5px"></i-switch>
         表格滚动  <i-switch v-model="fixedHeader" style="margin-right: 5px"></i-switch>
+        显示分页  <i-switch v-model="showPageable" style="margin-right: 5px"></i-switch>
+        单选操作  <i-switch v-model="singleSelection" style="margin-right: 5px"></i-switch>
         <br>
         <br>
         表格尺寸
@@ -17,11 +19,15 @@
           <Radio label="default">中</Radio>
           <Radio label="small">小</Radio>
         </Radio-group>
+        <Button type="primary" @click="exportExcel">导出为Csv文件</Button>
       </div>
-      <v-table :rows="rows" :columns="columns"
+      <v-table ref="testTable" :rows="rows" :columns="columns" :pageable="pageable"
                :show-border="showBorder" :show-stripe="showStripe"
-               :show-header="showHeader" :fixed-header="fixedHeader"
-               :table-size="tableSize"></v-table>
+               :show-header="showHeader" :fixed-header="fixedHeader" :show-pageable="showPageable"
+               :table-size="tableSize" :single-selection="singleSelection"
+               @on-selection-change="getCheckedList" @on-current-change="getCurrentRow"
+               @page-num-change="pageNumChange" @page-size-change="pageSizeChange"
+      ></v-table>
     </Card>
     </Col>
   </Row>
@@ -30,6 +36,8 @@
 
 <script>
 import VTable from '@/views/table/Table.vue'
+import { getListData } from '@/libs/api'
+import handleBtns from './handle-btns'
 
 export default {
   components: {
@@ -43,60 +51,37 @@ export default {
       showIndex: true,
       showCheckbox: false,
       fixedHeader: false,
+      showPageable: true,
+      singleSelection: false,
       tableSize: 'default',
-      rows: [
-        {
-          name: 'John Brown',
-          age: 18,
-          address: 'New York No. 1 Lake Park',
-          date: '2016-10-03'
-        },
-        {
-          name: 'Jim Green',
-          age: 24,
-          address: 'London No. 1 Lake Park',
-          date: '2016-10-01'
-        },
-        {
-          name: 'Joe Black',
-          age: 30,
-          address: 'Sydney No. 1 Lake Park',
-          date: '2016-10-02'
-        },
-        {
-          name: 'Jon Snow',
-          age: 26,
-          address: 'Ottawa No. 2 Lake Park',
-          date: '2016-10-04'
-        },
-        {
-          name: 'John Brown',
-          age: 18,
-          address: 'New York No. 1 Lake Park',
-          date: '2016-10-03'
-        },
-        {
-          name: 'Jim Green',
-          age: 24,
-          address: 'London No. 1 Lake Park',
-          date: '2016-10-01'
-        },
-        {
-          name: 'Joe Black',
-          age: 30,
-          address: 'Sydney No. 1 Lake Park',
-          date: '2016-10-02'
-        },
-        {
-          name: 'Jon Snow',
-          age: 26,
-          address: 'Ottawa No. 2 Lake Park',
-          date: '2016-10-04'
-        }
-      ]
+      checkedList: [],
+      currentRow: {},
+      rows: [],
+      pageable: {}
     }
   },
+  mounted () {
+    this.gotoFirstPage()
+  },
   methods: {
+    gotoFirstPage () {
+      this.$refs.testTable.setStoredPage(0)
+      this.list()
+      this.$refs.testTable.clearSearchParams()
+    },
+    list () {
+      let params = this.$refs.testTable.putSearchParams()
+      getListData(params).then(res => {
+        if (res.status === 'success') {
+          this.rows = res.data
+          this.pageable = res.pageable
+        } else {
+          res.errors.forEach((val, idx, array) => {
+            this.$Message.error('数据获取失败' + val.errmsg)
+          })
+        }
+      })
+    },
     show (index) {
       this.$Modal.info({
         title: '用户信息',
@@ -105,6 +90,34 @@ export default {
     },
     remove (index) {
       this.rows.splice(index, 1)
+    },
+    getCheckedList (data) {
+      // 获取多选数据
+      this.checkedList = data
+    },
+    getCurrentRow (newData, oldData) {
+      // 获取单选数据
+      this.currentRow = newData
+    },
+    pageNumChange (number) {
+      this.$refs.testTable.setStoredPage(number)
+      this.list()
+    },
+    pageSizeChange (size) {
+      this.$refs.testTable.setSize(size)
+      this.gotoFirstPage()
+    },
+    exportExcel () {
+      this.$refs.testTable.exportCsv({
+        filename: `table-${(new Date()).valueOf()}.csv`
+      })
+    }
+  },
+  watch: {
+    'singleSelection': function (newData, oldData) {
+      if (!newData) {
+        this.$refs.testTable.clearCurrentRow() // 清空单选数据
+      }
     }
   },
   computed: {
@@ -195,7 +208,7 @@ export default {
                   this.show(params.index)
                 }
               }
-            }, 'View'),
+            }, '查看'),
             h('Button', {
               props: {
                 type: 'error',
@@ -206,7 +219,7 @@ export default {
                   this.remove(params.index)
                 }
               }
-            }, 'Delete')
+            }, '删除')
           ])
         }
       })
