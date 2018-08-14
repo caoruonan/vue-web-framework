@@ -8,7 +8,7 @@
            :height="fixedHeader ? 250 : ''"
            :size="tableSize"
            :data="rows"
-           :columns="columns"
+           :columns="insideColumns"
            @on-current-change="onCurrentChange"
            @on-select="onSelect"
            @on-select-cancel="onSelectCancel"
@@ -18,7 +18,7 @@
     <div style="margin: 10px;overflow: hidden" v-if="showPageable">
       <div style="float: right">
         <Page :total="pageable.totalElements"
-              :current="pageable.number + 1"
+              :current="pageable.totalElements?pageable.number + 1:pageable.number"
               show-total
               show-sizer
               :page-size="pageable.size"
@@ -31,6 +31,7 @@
   </div>
 </template>
 <script>
+import handleBtns from './handle-btns'
 
 export default {
   name: 'VTable',
@@ -113,7 +114,9 @@ export default {
       currentRow: {},
       storedPage: 0,
       pageableSize: 10,
-      s_search: {}
+      s_search: {},
+      insideColumns: [],
+      insideTableData: []
     }
   },
   methods: {
@@ -176,7 +179,29 @@ export default {
     },
     clearSearchParams () {
       this.s_search = {}
+    },
+    handleColumns (columns) {
+      this.insideColumns = columns.map((item, index) => {
+        let res = item
+        if (res.key === 'handle') res = this.surportHandle(res)
+        return res
+      })
+    },
+    surportHandle (item) {
+      let options = item.options || []
+      let insideBtns = []
+      options.forEach(item => {
+        if (handleBtns[item]) insideBtns.push(handleBtns[item])
+      })
+      let btns = item.button ? [].concat(insideBtns, item.button) : insideBtns
+      item.render = (h, params) => {
+        return h('div', btns.map(item => item(h, params, this)))
+      }
+      return item
     }
+  },
+  mounted () {
+    this.handleColumns(this.columns)
   }
 }
 </script>

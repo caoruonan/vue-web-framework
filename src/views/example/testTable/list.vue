@@ -27,6 +27,7 @@
                :table-size="tableSize" :single-selection="singleSelection"
                @on-selection-change="getCheckedList" @on-current-change="getCurrentRow"
                @page-num-change="pageNumChange" @page-size-change="pageSizeChange"
+               @on-view="view" @on-edit="edit" @on-delete="remove"
       ></v-table>
     </Card>
     </Col>
@@ -35,9 +36,8 @@
 </template>
 
 <script>
-import VTable from '@/views/table/Table.vue'
+import VTable from '@/components/table'
 import { getListData } from '@/libs/api'
-import handleBtns from './handle-btns'
 
 export default {
   components: {
@@ -82,11 +82,11 @@ export default {
         }
       })
     },
-    show (index) {
-      this.$Modal.info({
-        title: '用户信息',
-        content: '123'
-      })
+    view (index) {
+      // todo 跳转至查看页
+    },
+    edit (index) {
+      // todo 跳转至编辑
     },
     remove (index) {
       this.rows.splice(index, 1)
@@ -173,6 +173,7 @@ export default {
       columns.push({
         title: '地址',
         key: 'address',
+        tooltip: true,
         filters: [
           {
             label: 'New York',
@@ -193,35 +194,9 @@ export default {
       })
       columns.push({
         title: '操作',
-        key: 'action',
-        width: 150,
+        key: 'handle',
         align: 'center',
-        render: (h, params) => {
-          return h('div', [
-            h('Button', {
-              props: {
-                type: 'primary',
-                size: 'small'
-              },
-              on: {
-                click: () => {
-                  this.show(params.index)
-                }
-              }
-            }, '查看'),
-            h('Button', {
-              props: {
-                type: 'error',
-                size: 'small'
-              },
-              on: {
-                click: () => {
-                  this.remove(params.index)
-                }
-              }
-            }, '删除')
-          ])
-        }
+        options: ['view', 'edit', 'delete']
       })
       return columns
     }

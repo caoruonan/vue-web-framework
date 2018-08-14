@@ -1,5 +1,5 @@
 import Content from '@/views/Content.vue'
-import ParentView from '@/views/parent-view'
+import ParentView from '@/components/parent-view'
 
 /**
  * meta: {

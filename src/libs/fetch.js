@@ -1,7 +1,8 @@
 import axios from 'axios'
+import { Message } from 'iview'
 
 const ajaxUrl = process.env.NODE_ENV === 'development' ? '' : process.env.NODE_ENV === 'production' ? '' : ''
-
+Message.config({duration: 5})
 export function fetch (options) {
   return new Promise((resolve, reject) => {
     const instance = axios.create({
@@ -45,9 +46,26 @@ export function fetch (options) {
       .catch(error => {
         if (error.response) {
           switch (error.response.status) {
-            case 401:
-              // TODO 跳转登录页面
+            case 400:
+              Message.error('请求传递参数不正确！')
               break
+            case 401:
+              window.location.href = '/#/login'
+              break
+            case 403:
+              window.location.href = '/#/login'
+              break
+            case 404:
+              Message.error('你请求的资源未找到！')
+              break
+            case 500:
+              Message.error('服务异常！')
+              break
+            case 504:
+              Message.error('请求超时！')
+              break
+            default:
+              Message.error('其他异常！')
           }
         }
         reject(error)
