@@ -92,5 +92,105 @@ export const dynamicRouter = [
       },
       component: resolve => { require(['@/views/example/testTable/list.vue'], resolve) }
     }]
+  },
+  {
+    path: '/map',
+    name: 'map',
+    meta: {
+      hide: true
+    },
+    redirect: { name: 'mapDemo' },
+    component: Content,
+    children: [{
+      path: 'mapDemo',
+      name: 'mapDemo',
+      meta: {
+        icon: 'fas fa-table',
+        title: '地图示例'
+      },
+      component: resolve => { require(['@/views/example/map/map.vue'], resolve) }
+    }
+    ]
+  },
+  {
+    path: '/echart',
+    name: 'echart',
+    meta: {
+      hide: true
+    },
+    redirect: { name: 'echartDemo' },
+    component: Content,
+    children: [{
+      path: 'echartDemo',
+      name: 'echartDemo',
+      meta: {
+        icon: 'fas fa-table',
+        title: 'echart图示例'
+      },
+      component: resolve => { require(['@/views/example/echart/echart.vue'], resolve) }
+    }
+    ]
+  },
+  {
+    path: '/tree',
+    name: 'tree',
+    meta: {
+      hide: true
+    },
+    redirect: { name: 'treeDemo' },
+    component: Content,
+    children: [{
+      path: 'treeDemo',
+      name: 'treeDemo',
+      meta: {
+        icon: 'fas fa-table',
+        title: 'tree图示例'
+      },
+      component: ParentView,
+      redirect: { name: 'treeDemoList' },
+      children: [
+        {
+          path: 'list',
+          name: 'treeDemoList',
+          meta: {
+            hideInMenu: true,
+            showInBread: true,
+            title: '列表'
+          },
+          component: resolve => { require(['@/views/example/tree/tree.vue'], resolve) }
+        },
+        {
+          path: 'create',
+          name: 'treeDemoCreate',
+          meta: {
+            hideInMenu: true,
+            showInBread: true,
+            title: '新建'
+          },
+          component: resolve => { require(['@/views/example/tree/edit.vue'], resolve) }
+        },
+        {
+          path: 'edit/:id',
+          name: 'treeDemoEdit',
+          meta: {
+            hideInMenu: true,
+            showInBread: true,
+            title: '编辑'
+          },
+          component: resolve => { require(['@/views/example/tree/edit.vue'], resolve) }
+        },
+        {
+          path: 'view/:id',
+          name: 'treeDemoView',
+          meta: {
+            hideInMenu: true,
+            showInBread: true,
+            title: '详情'
+          },
+          component: resolve => { require(['@/views/example/tree/view.vue'], resolve) }
+        }
+      ]
+    }
+    ]
   }
 ]
