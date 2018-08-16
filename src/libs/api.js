@@ -9,6 +9,14 @@ export function getAuthorizedMenus () {
   })
 }
 
+export function getListData (params) {
+  return fetch({
+    url: apiPrefix + '/w/table',
+    params: params,
+    method: 'get'
+  })
+}
+
 export function getHebeiData () {
   return fetch({
     url: apiPrefix + '/w/hebei',
