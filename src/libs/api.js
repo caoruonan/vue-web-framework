@@ -8,3 +8,11 @@ export function getAuthorizedMenus () {
     method: 'get'
   })
 }
+
+export function getListData (params) {
+  return fetch({
+    url: apiPrefix + '/w/table',
+    params: params,
+    method: 'get'
+  })
+}

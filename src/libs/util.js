@@ -13,8 +13,11 @@ export const getToken = () => {
   else return false
 }
 export const title = (title, vm) => {
-  title = title || window.document.title
-  window.document.title = title
+  let iTitle = 'LeadingSoft Vue Framewor'
+  // if (title) {
+  //   iTitle += ' - ' + (title.i18n ? title.i18n : title)
+  // }
+  window.document.title = iTitle
 }
 export const toDefaultPage = (routers, name, route, next) => {
   let len = routers.length
