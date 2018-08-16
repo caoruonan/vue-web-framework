@@ -1,5 +1,5 @@
 import Content from '@/views/Content.vue'
-import ParentView from '@/views/parent-view'
+import ParentView from '@/components/parent-view'
 
 /**
  * meta: {
@@ -79,7 +79,8 @@ export const dynamicRouter = [
     path: '/table',
     name: 'table',
     meta: {
-      hide: true
+      icon: 'fas fa-table',
+      title: '多功能表格'
     },
     redirect: { name: 'testTable' },
     component: Content,
@@ -87,8 +88,8 @@ export const dynamicRouter = [
       path: 'testTable',
       name: 'testTable',
       meta: {
-        icon: 'fas fa-table',
-        title: '表格示例'
+        hide: true,
+        title: '多功能表格'
       },
       component: resolve => { require(['@/views/example/testTable/list.vue'], resolve) }
     }]
