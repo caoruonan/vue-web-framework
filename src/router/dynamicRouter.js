@@ -34,10 +34,29 @@ export const dynamicRouter = [
     ]
   },
   {
+    path: '/table',
+    name: 'table',
+    meta: {
+      icon: 'fas fa-table',
+      title: '多功能表格'
+    },
+    redirect: { name: 'testTable' },
+    component: Content,
+    children: [{
+      path: 'testTable',
+      name: 'testTable',
+      meta: {
+        hide: true,
+        title: '多功能表格'
+      },
+      component: resolve => { require(['@/views/example/testTable/list.vue'], resolve) }
+    }]
+  },
+  {
     path: '/example',
     name: 'example',
     meta: {
-      hide: true
+      icon: 'fas fa-table'
     },
     redirect: { name: 'demo1List' },
     component: Content,
@@ -45,8 +64,7 @@ export const dynamicRouter = [
       path: 'demo1',
       name: 'demo1',
       meta: {
-        icon: 'fas fa-table',
-        title: 'demo1'
+        hide: true
       },
       component: ParentView,
       redirect: { name: 'demo1List' },
@@ -67,31 +85,32 @@ export const dynamicRouter = [
           meta: {
             hideInMenu: true,
             showInBread: true,
-            title: 'demo1创建'
+            title: '新建'
           },
           component: resolve => { require(['@/views/example/demo1/create.vue'], resolve) }
+        },
+        {
+          path: 'edit/:id',
+          name: 'demo1Edit',
+          meta: {
+            hideInMenu: true,
+            showInBread: true,
+            title: '编辑'
+          },
+          component: resolve => { require(['@/views/example/demo1/create.vue'], resolve) }
+        },
+        {
+          path: 'view/:id',
+          name: 'demo1View',
+          meta: {
+            hideInMenu: true,
+            showInBread: true,
+            title: '查看'
+          },
+          component: resolve => { require(['@/views/example/demo1/view.vue'], resolve) }
         }
       ]
     }
     ]
-  },
-  {
-    path: '/table',
-    name: 'table',
-    meta: {
-      icon: 'fas fa-table',
-      title: '多功能表格'
-    },
-    redirect: { name: 'testTable' },
-    component: Content,
-    children: [{
-      path: 'testTable',
-      name: 'testTable',
-      meta: {
-        hide: true,
-        title: '多功能表格'
-      },
-      component: resolve => { require(['@/views/example/testTable/list.vue'], resolve) }
-    }]
   }
 ]
