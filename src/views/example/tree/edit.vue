@@ -59,7 +59,7 @@
   </Row>
 </template>
 <script>
-import { getTreeTableDetail } from '@/libs/api'
+import { getTreeTableDetail, saveTreeTableDetail, createTreeTableDetail } from '@/libs/api'
 export default {
   data () {
     return {
@@ -73,17 +73,32 @@ export default {
   methods: {
     getDetail () {
       let that = this
-      if (this.id) {
-        getTreeTableDetail(this.id).then(function (res) {
+      if (that.id) {
+        getTreeTableDetail(that.id).then(function (res) {
           let data = res.data
           // console.log(data)
-          that.model = data.data
+          that.model = data
         })
       }
     },
     // 提交
     submit () {
-      this.$router.push('/tree/treeDemo/list')
+      let that = this
+      if (that.id) {
+        saveTreeTableDetail(that.id).then(function (res) {
+          console.log(res)
+          if (res.status === 'success') {
+            that.back()
+          }
+        })
+      } else {
+        createTreeTableDetail().then(function (res) {
+          console.log(res)
+          if (res.status === 'success') {
+            that.back()
+          }
+        })
+      }
     },
     // 返回
     back () {
