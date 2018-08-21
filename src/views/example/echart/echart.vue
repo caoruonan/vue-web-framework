@@ -614,7 +614,7 @@ export default {
       let that = this
       getHebeiData().then(function (res) {
         let data = res
-        console.log(data)
+        // console.log(data)
         that.initMapChart(data)
       })
     }
