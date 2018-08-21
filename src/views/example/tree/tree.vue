@@ -148,9 +148,8 @@ export default {
     getOrganizationData () {
       let that = this
       getOrganization().then(function (res) {
-        let data = res.data
-        // console.log(res)
-        that.treeData = data.data
+        that.treeData = res.data
+        // console.log(that.treeData)
       })
     },
     // 自定义左侧树 图标
@@ -200,9 +199,8 @@ export default {
     getTableData (id) {
       let that = this
       getTreeTableList().then(function (res) {
-        let data = res.data
-        // console.log(data)
-        that.tableData = data.data
+        that.tableData = res.data
+        // console.log(that.tableData)
         that.tableSelectData = that.tableData
         if (id === '5' && id !== undefined) {
           that.tableSelectData = [
@@ -235,7 +233,6 @@ export default {
     },
     // 查看详情
     view (row, index) {
-      // this.$router.push('/tree/treeDemo/view')
       this.$router.push({name: 'treeDemoView', params: {id: row.id}})
     },
     // 新建
