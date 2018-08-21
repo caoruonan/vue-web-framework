@@ -17,10 +17,26 @@ export function getListData (params) {
   })
 }
 
+export function getDetail (id) {
+  return fetch({
+    url: apiPrefix + '/w/table/' + id,
+    method: 'get'
+  })
+}
+
 export function getHebeiData () {
   return fetch({
     url: apiPrefix + '/w/hebei',
     method: 'get'
+  })
+}
+
+export function saveData (model) {
+  let flag = model.id ? ('/' + model.id) : ''
+  return fetch({
+    url: apiPrefix + '/w/table' + flag,
+    method: model.id ? 'put' : 'post',
+    data: model
   })
 }
 
