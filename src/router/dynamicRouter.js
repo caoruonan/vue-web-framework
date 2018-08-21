@@ -67,9 +67,29 @@ export const dynamicRouter = [
           meta: {
             hideInMenu: true,
             showInBread: true,
-            title: 'demo1创建'
+            title: '新建'
           },
           component: resolve => { require(['@/views/example/demo1/create.vue'], resolve) }
+        },
+        {
+          path: 'edit/:id',
+          name: 'demo1Edit',
+          meta: {
+            hideInMenu: true,
+            showInBread: true,
+            title: '编辑'
+          },
+          component: resolve => { require(['@/views/example/demo1/create.vue'], resolve) }
+        },
+        {
+          path: 'view/:id',
+          name: 'demo1View',
+          meta: {
+            hideInMenu: true,
+            showInBread: true,
+            title: '详情'
+          },
+          component: resolve => { require(['@/views/example/demo1/view.vue'], resolve) }
         }
       ]
     }

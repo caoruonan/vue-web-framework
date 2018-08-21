@@ -82,14 +82,14 @@ export default {
         }
       })
     },
-    view (index) {
+    view (params) {
       // todo 跳转至查看页
     },
-    edit (index) {
+    edit (params) {
       // todo 跳转至编辑
     },
-    remove (index) {
-      this.rows.splice(index, 1)
+    remove (params) {
+      this.rows.splice(params.index, 1)
     },
     getCheckedList (data) {
       // 获取多选数据

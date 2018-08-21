@@ -1,1 +1,12 @@
 /* custom css in this */
+/*遮罩样式重写*/
+.ivu-spin-fix {
+  background-color: rgba(255,255,255,0.1);
+}
+/*list-search-con样式*/
+.search-con.search-con-top {
+  padding: 10px 0;
+  .search-right-box {
+    float: right;
+  }
+}
