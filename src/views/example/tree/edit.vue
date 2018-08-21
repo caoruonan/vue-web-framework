@@ -28,10 +28,10 @@
             </Row>
             <Row class="rowStyle">
               <Col span="6" class="labelStyle">
-              <span>年龄：</span>
+              <span>邮箱：</span>
               </Col>
               <Col span="8">
-              <Input class="inputStyle" v-model="model.age" placeholder="请输入年龄"/>
+              <Input class="inputStyle" v-model="model.mail" placeholder="请输入邮箱"/>
               </Col>
             </Row>
             <Row class="rowStyle">
@@ -39,7 +39,7 @@
               <span>地址：</span>
               </Col>
               <Col span="8">
-              <Input class="inputStyle" v-model="model.address" placeholder="请输入地址"/>
+              <Input class="inputStyle" v-model="model.city" placeholder="请输入地址"/>
               </Col>
             </Row>
             <Row class="rowStyle">
@@ -59,7 +59,7 @@
   </Row>
 </template>
 <script>
-import { getTreeTableDetail, saveTreeTableDetail, createTreeTableDetail } from '@/libs/api'
+import { getTreeTableDetail, saveTreeTableDetail } from '@/libs/api'
 export default {
   data () {
     return {
@@ -84,21 +84,12 @@ export default {
     // 提交
     submit () {
       let that = this
-      if (that.id) {
-        saveTreeTableDetail(that.id).then(function (res) {
-          console.log(res)
-          if (res.status === 'success') {
-            that.back()
-          }
-        })
-      } else {
-        createTreeTableDetail().then(function (res) {
-          console.log(res)
-          if (res.status === 'success') {
-            that.back()
-          }
-        })
-      }
+      that.model.id = that.id
+      saveTreeTableDetail(that.model).then(function (res) {
+        if (res.status === 'success') {
+          that.back()
+        }
+      })
     },
     // 返回
     back () {
