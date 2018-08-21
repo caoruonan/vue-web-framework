@@ -613,7 +613,7 @@ export default {
     getMapChartData () {
       let that = this
       getHebeiData().then(function (res) {
-        let data = res.data
+        let data = res
         console.log(data)
         that.initMapChart(data)
       })
