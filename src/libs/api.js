@@ -44,3 +44,17 @@ export function getTreeTableDetail (id) {
     method: 'get'
   })
 }
+
+export function createTreeTableDetail () {
+  return fetch({
+    url: apiPrefix + '/w/table',
+    method: 'post'
+  })
+}
+
+export function saveTreeTableDetail (id) {
+  return fetch({
+    url: apiPrefix + '/w/table/' + id,
+    method: 'put'
+  })
+}
