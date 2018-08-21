@@ -73,10 +73,10 @@ export default {
   methods: {
     getDetail () {
       let that = this
-      getTreeTableDetail(this.id).then(function (res) {
+      getTreeTableDetail(that.id).then(function (res) {
         let data = res.data
         // console.log(data)
-        that.model = data.data
+        that.model = data
       })
     },
     // 编辑
