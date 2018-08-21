@@ -45,16 +45,11 @@ export function getTreeTableDetail (id) {
   })
 }
 
-export function createTreeTableDetail () {
+export function saveTreeTableDetail (model) {
+  let flag = model.id ? ('/' + model.id) : ''
   return fetch({
-    url: apiPrefix + '/w/table',
-    method: 'post'
-  })
-}
-
-export function saveTreeTableDetail (id) {
-  return fetch({
-    url: apiPrefix + '/w/table/' + id,
-    method: 'put'
+    url: apiPrefix + '/w/table/' + flag,
+    method: model.id ? 'put' : 'post',
+    data: model
   })
 }
