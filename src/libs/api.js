@@ -48,7 +48,7 @@ export function getTreeTableDetail (id) {
 export function saveTreeTableDetail (model) {
   let flag = model.id ? ('/' + model.id) : ''
   return fetch({
-    url: apiPrefix + '/w/table/' + flag,
+    url: apiPrefix + '/w/table' + flag,
     method: model.id ? 'put' : 'post',
     data: model
   })
