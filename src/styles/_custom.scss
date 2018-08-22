@@ -10,3 +10,13 @@
     float: right;
   }
 }
+/*bootstrap 样式重写*/
+.ivu-form .ivu-form-item-label, .ivu-checkbox-group-item, .ivu-radio-wrapper {
+  font-weight: 500;
+}
+.ivu-checkbox-group-item, .ivu-radio-wrapper {
+  margin-bottom: 0;
+}
+.ivu-form-item-content {
+  line-height: 30px;
+}
