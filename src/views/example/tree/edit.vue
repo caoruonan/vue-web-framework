@@ -28,10 +28,10 @@
             </Row>
             <Row class="rowStyle">
               <Col span="6" class="labelStyle">
-              <span>年龄：</span>
+              <span>邮箱：</span>
               </Col>
               <Col span="8">
-              <Input class="inputStyle" v-model="model.age" placeholder="请输入年龄"/>
+              <Input class="inputStyle" v-model="model.mail" placeholder="请输入邮箱"/>
               </Col>
             </Row>
             <Row class="rowStyle">
@@ -39,7 +39,7 @@
               <span>地址：</span>
               </Col>
               <Col span="8">
-              <Input class="inputStyle" v-model="model.address" placeholder="请输入地址"/>
+              <Input class="inputStyle" v-model="model.city" placeholder="请输入地址"/>
               </Col>
             </Row>
             <Row class="rowStyle">
@@ -59,7 +59,7 @@
   </Row>
 </template>
 <script>
-import { getTreeTableDetail } from '@/libs/api'
+import { getTreeTableDetail, saveTreeTableDetail } from '@/libs/api'
 export default {
   data () {
     return {
@@ -73,17 +73,23 @@ export default {
   methods: {
     getDetail () {
       let that = this
-      if (this.id) {
-        getTreeTableDetail(this.id).then(function (res) {
+      if (that.id) {
+        getTreeTableDetail(that.id).then(function (res) {
           let data = res.data
           // console.log(data)
-          that.model = data.data
+          that.model = data
         })
       }
     },
     // 提交
     submit () {
-      this.$router.push('/tree/treeDemo/list')
+      let that = this
+      that.model.id = that.id
+      saveTreeTableDetail(that.model).then(function (res) {
+        if (res.status === 'success') {
+          that.back()
+        }
+      })
     },
     // 返回
     back () {

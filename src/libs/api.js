@@ -24,6 +24,7 @@ export function getDetail (id) {
   })
 }
 
+/* echart-component */
 export function getHebeiData () {
   return fetch({
     url: apiPrefix + '/w/hebei',
@@ -40,6 +41,8 @@ export function saveData (model) {
   })
 }
 
+/* tree-component-树 */
+/* tree-component-树-组织机构 */
 export function getOrganization () {
   return fetch({
     url: apiPrefix + '/w/organization',
@@ -47,6 +50,7 @@ export function getOrganization () {
   })
 }
 
+/* tree-component-树-表格 */
 export function getTreeTableList () {
   return fetch({
     url: apiPrefix + '/w/table',
@@ -58,5 +62,14 @@ export function getTreeTableDetail (id) {
   return fetch({
     url: apiPrefix + '/w/table/' + id,
     method: 'get'
+  })
+}
+
+export function saveTreeTableDetail (model) {
+  let flag = model.id ? ('/' + model.id) : ''
+  return fetch({
+    url: apiPrefix + '/w/table' + flag,
+    method: model.id ? 'put' : 'post',
+    data: model
   })
 }

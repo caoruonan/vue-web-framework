@@ -19,19 +19,19 @@
           </p>
           <div class="cardFormBody">
             <Row class="rowStyle">
-                <Col span="6" class="labelStyle">
-                <span>姓名：</span>
-                </Col>
-                <Col span="18" class="labelStyle newLine">
-                <span v-text="model.name"></span>
-                </Col>
+              <Col span="6" class="labelStyle">
+              <span>姓名：</span>
+              </Col>
+              <Col span="18" class="labelStyle newLine">
+              <span v-text="model.name"></span>
+              </Col>
             </Row>
             <Row class="rowStyle">
               <Col span="6" class="labelStyle">
-              <span>年龄：</span>
+              <span>邮箱：</span>
               </Col>
               <Col span="18" class="labelStyle newLine">
-              <span v-text="model.age"></span>
+              <span v-text="model.mail"></span>
               </Col>
             </Row>
             <Row class="rowStyle">
@@ -39,7 +39,7 @@
               <span>地址：</span>
               </Col>
               <Col span="18" class="labelStyle newLine">
-              <span v-text="model.address"></span>
+              <span v-text="model.city"></span>
               </Col>
             </Row>
             <Row class="rowStyle">
@@ -73,10 +73,10 @@ export default {
   methods: {
     getDetail () {
       let that = this
-      getTreeTableDetail(this.id).then(function (res) {
+      getTreeTableDetail(that.id).then(function (res) {
         let data = res.data
         // console.log(data)
-        that.model = data.data
+        that.model = data
       })
     },
     // 编辑
