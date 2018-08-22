@@ -17,12 +17,12 @@
                     <Row>
                       <Col span="12">
                       <FormItem label="名称：">
-                        <Input v-model="model.name" disabled placeholder="请输入名称"></Input>
+                        <label class="ivu-form-item-label">{{model.name}}</label>
                       </FormItem>
                       </Col>
                       <Col span="12">
                       <FormItem label="邮箱：">
-                        <Input v-model="model.mail" disabled placeholder="请输入邮箱"></Input>
+                        <label class="ivu-form-item-label">{{model.mail}}</label>
                       </FormItem>
                       </Col>
                     </Row>
@@ -30,25 +30,21 @@
                     <Row>
                       <Col span="12">
                       <FormItem label="城市：">
-                        <Select v-model="model.city" disabled placeholder="请选择城市">
-                          <Option value="beijing">纽约</Option>
-                          <Option value="shanghai">伦敦</Option>
-                          <Option value="shenzhen">悉尼</Option>
-                        </Select>
+                        <label class="ivu-form-item-label">{{model.city | cityFilter}}</label>
                       </FormItem>
                       </Col>
                       <Col span="12">
                       <FormItem label="日期：">
                         <Row>
-                          <Col span="11">
+                          <Col span="5">
                           <FormItem>
-                            <DatePicker type="date" disabled placeholder="请选择日期" v-model="model.date"></DatePicker>
+                            <label class="ivu-form-item-label">{{parseTime(model.date, '{y}-{m}-{d}')}}</label>
                           </FormItem>
                           </Col>
                           <Col span="2" style="text-align: center">-</Col>
                           <Col span="11">
                           <FormItem>
-                            <TimePicker type="time" disabled placeholder="请选择时间" v-model="model.time"></TimePicker>
+                            <label class="ivu-form-item-label" style="padding-left: 12px;">{{model.time}}</label>
                           </FormItem>
                           </Col>
                         </Row>
@@ -59,20 +55,12 @@
                     <Row>
                       <Col span="12">
                       <FormItem label="爱好：">
-                        <CheckboxGroup v-model="model.interest">
-                          <Checkbox disabled label="美食"></Checkbox>
-                          <Checkbox disabled label="睡觉"></Checkbox>
-                          <Checkbox disabled label="跑步"></Checkbox>
-                          <Checkbox disabled label="电影"></Checkbox>
-                        </CheckboxGroup>
+                        <label class="ivu-form-item-label">{{model.interest.toString()}}</label>
                       </FormItem>
                       </Col>
                       <Col span="12">
                       <FormItem label="性别：">
-                        <RadioGroup v-model="model.gender">
-                          <Radio disabled label="male">男</Radio>
-                          <Radio disabled label="female">女</Radio>
-                        </RadioGroup>
+                        <label class="ivu-form-item-label">{{model.gender | genderFilter}}</label>
                       </FormItem>
                       </Col>
                     </Row>
@@ -80,7 +68,7 @@
                     <Row>
                       <Col span="24">
                       <FormItem label="描述：">
-                        <Input v-model="model.desc" disabled type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></Input>
+                        <label class="ivu-form-item-label">{{model.desc}}</label>
                       </FormItem>
                       </Col>
                     </Row>
@@ -96,6 +84,7 @@
 </template>
 <script>
 import { getDetail } from '@/libs/api'
+import { parseTime } from '@/libs/tools'
 
 export default {
   name: 'demo1View',
@@ -121,6 +110,9 @@ export default {
     }
   },
   methods: {
+    parseTime (time, cFormat) {
+      return parseTime(time, cFormat)
+    },
     getDetail () {
       getDetail(this.id).then(res => {
         if (res.status === 'success') {
@@ -135,6 +127,20 @@ export default {
     },
     back: function () {
       this.$router.push({name: 'demo1List'})
+    }
+  },
+  filters: {
+    genderFilter: function (value) {
+      return value === 'male' ? '男' : '女'
+    },
+    cityFilter: function (value) {
+      if (value === 'beijing') {
+        return '北京'
+      } else if (value === 'shanghai') {
+        return '上海'
+      } else {
+        return '深圳'
+      }
     }
   }
 }

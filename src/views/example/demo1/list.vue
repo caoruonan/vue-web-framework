@@ -30,6 +30,7 @@
 <script>
 import VTable from '@/components/table'
 import { getListData } from '@/libs/api'
+import { parseTime } from '@/libs/tools'
 
 export default {
   name: 'demo1List',
@@ -47,7 +48,7 @@ export default {
     columns () {
       let columns = []
       columns.push({title: '序号', type: 'index', width: 60, align: 'center'})
-      columns.push({title: '日期', key: 'date', sortable: true})
+      columns.push({title: '日期', key: 'date', sortable: true, render: function (h, params) { return h('div', parseTime(this.row.date, '{y}-{m}-{d}')) }})
       columns.push({title: '姓名', key: 'name'})
       columns.push({title: '年龄', key: 'age'})
       columns.push({title: '地址', key: 'address', tooltip: true})

@@ -18,7 +18,7 @@
                   <Form ref="model" :model="model" :rules="ruleValidate" :label-width="80">
                     <Row>
                       <Col span="12">
-                      <FormItem label="名称" prop="name">
+                      <FormItem label="Text" prop="name">
                         <Input v-model="model.name" placeholder="请输入名称"></Input>
                       </FormItem>
                       </Col>
@@ -33,9 +33,9 @@
                       <Col span="12">
                       <FormItem label="城市" prop="city">
                         <Select v-model="model.city" placeholder="请选择城市">
-                          <Option value="beijing">纽约</Option>
-                          <Option value="shanghai">伦敦</Option>
-                          <Option value="shenzhen">悉尼</Option>
+                          <Option value="beijing">北京</Option>
+                          <Option value="shanghai">上海</Option>
+                          <Option value="shenzhen">深圳</Option>
                         </Select>
                       </FormItem>
                       </Col>

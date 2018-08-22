@@ -38,6 +38,7 @@
 <script>
 import VTable from '@/components/table'
 import { getListData } from '@/libs/api'
+import { parseTime } from '@/libs/tools'
 
 export default {
   components: {
@@ -141,7 +142,12 @@ export default {
       columns.push({
         title: '日期',
         key: 'date',
-        sortable: true
+        sortable: true,
+        render: function (h, params) {
+          return h('div',
+            parseTime(this.row.date, '{y}-{m}-{d}')
+          )
+        }
       })
       columns.push({
         title: '姓名',
