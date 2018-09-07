@@ -35,19 +35,7 @@
                       </Col>
                       <Col span="12">
                       <FormItem label="日期：">
-                        <Row>
-                          <Col span="5">
-                          <FormItem>
-                            <label class="ivu-form-item-label">{{parseTime(model.date, '{y}-{m}-{d}')}}</label>
-                          </FormItem>
-                          </Col>
-                          <Col span="2" style="text-align: center">-</Col>
-                          <Col span="11">
-                          <FormItem>
-                            <label class="ivu-form-item-label" style="padding-left: 12px;">{{model.time}}</label>
-                          </FormItem>
-                          </Col>
-                        </Row>
+                        <label class="ivu-form-item-label" v-text="parseTime(model.date, '{y}-{m}-{d}') + ' - ' + model.time"></label>
                       </FormItem>
                       </Col>
                     </Row>
